@@ -25,17 +25,59 @@ let myLibrary = [
     }
 ];
 
-const grid = document.querySelector('main');
-
-render();
-loadListeners();
-
-function Book() {
-
+function Book(title, author, pages, read) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
 }
 
-function addBookToLibrary(book) {
+const grid = document.querySelector('main');
+const addButton = document.querySelector('#add-book');
+const bookForm = document.querySelector('#book-form');
 
+bookForm.onsubmit = addBookToLibrary.bind(bookForm);
+
+function addBookToLibrary(e) {
+    e.preventDefault();    //stop form from submitting
+    let book = new Book(
+        e.target.elements.title.value,
+        e.target.elements.author.value,
+        e.target.elements.pages.value,
+        e.target.elements.read.value
+    );
+    myLibrary.push(book);
+    render();
+    loadListeners();
+    bookForm.reset();
+    addButton.click();
+}
+
+function changeReadStatus(e, bookId) {
+    if(myLibrary[bookId].read) {
+        myLibrary[bookId].read = false;
+        e.target.textContent = 'Not read yet';
+    } else {
+        myLibrary[bookId].read = true;
+        e.target.textContent = 'Read';
+    }
+}
+
+function deleteBook(e, bookId) {
+    myLibrary.splice(bookId, 1);
+    render();
+    loadListeners();
+}
+
+function loadListeners() {
+    document.querySelectorAll('.my-card').forEach(c => {
+        const bookId = c.getAttribute('id').slice(5);
+        const readBook = c.querySelector('.read');
+        const delBook = c.querySelector('#del-book');
+
+        readBook.addEventListener('click', e => changeReadStatus(e, bookId));
+        delBook.addEventListener('click', e => deleteBook(e, bookId));
+    });
 }
 
 function render() {
@@ -77,29 +119,5 @@ function render() {
     });
 }
 
-function loadListeners() {
-    document.querySelectorAll('.my-card').forEach(c => {
-        const bookId = c.getAttribute('id').slice(5);
-        const readBook = c.querySelector('.read');
-        const delBook = c.querySelector('#del-book');
-
-        readBook.addEventListener('click', e => changeReadStatus(e, bookId));
-        delBook.addEventListener('click', e => deleteBook(e, bookId));
-    });
-}
-
-function changeReadStatus(e, bookId) {
-    if(myLibrary[bookId].read) {
-        myLibrary[bookId].read = false;
-        e.target.textContent = 'Not read yet';
-    } else {
-        myLibrary[bookId].read = true;
-        e.target.textContent = 'Read';
-    }
-}
-
-function deleteBook(e, bookId) {
-    myLibrary.splice(bookId, 1);
-    render();
-    loadListeners();
-}
+render();
+loadListeners();
