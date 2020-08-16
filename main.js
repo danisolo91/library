@@ -44,9 +44,10 @@ function addBookToLibrary(e) {
         e.target.elements.title.value,
         e.target.elements.author.value,
         e.target.elements.pages.value,
-        e.target.elements.read.value.checked
+        e.target.elements.read.checked
     );
     myLibrary.push(book);
+    console.log(myLibrary);
     render();
     loadListeners();
     bookForm.reset();
