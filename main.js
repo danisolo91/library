@@ -56,13 +56,10 @@ class Library {
 
 class ViewController {
 
-    constructor() {
-        this.grid = document.querySelector('main');
-        this.addButton = document.querySelector('#add-book');
-        this.bookForm = document.querySelector('#book-form');
-        this.bookForm.onsubmit = this.addBook.bind(this);
-        this.library = new Library();        
-    }
+    grid = document.querySelector('main');
+    addButton = document.querySelector('#add-book');
+    bookForm = document.querySelector('#book-form');
+    library = new Library();
 
     renderLibary() {
         while(this.grid.firstChild) this.grid.removeChild(this.grid.lastChild); // clear the grid
@@ -106,6 +103,7 @@ class ViewController {
     }
 
     loadEvents() {
+        this.bookForm.onsubmit = this.addBook.bind(this);
         document.querySelectorAll('.my-card').forEach(c => {
             const bookId = c.getAttribute('id').slice(5);
             const readBook = c.querySelector('.read');
